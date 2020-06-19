@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Gesh | Time Left</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        	* {
+        		margin: 0;
+        		padding: 0;
+        		box-sizing: border-box;
+        	}
+        	body {
+        		height: 100vh;
+        		background: #FFc015;
+        		color: #000;
+				font-family: arial, sans-serif;
+        	}
+        	.main-nav {
+        		display: flex;
+        		justify-content: center;
+        		align-items: center;
+        		background-color: #000;
+        		color: #FFc015;
+        	}
+			
+			.center {
+				text-align: center;
+			}
+
+			.main-nav-title {
+				font-size: 30px;
+				letter-spacing: 0.3rem;
+				padding: 5px;
+				text-transform: uppercase;
+			}
+			
+			main {
+				font-size: 22px;
+			}
+
+			.hour::after {
+				content: ":";
+				margin-right: 5px;
+				margin-left: 5px;
+			}
+			.day {
+				margin-left: 30px;
+			}
+			.day::after, 
+			.month::after {
+				content: "/";
+				margin-right: 5px;
+				margin-left: 5px;
+			}
+			.time {
+				display: flex;
+				justify-content: center;
+				padding: 10px;
+				margin: 10px;
+				background: orangered;
+			}
+			.time-title {
+				font-size: 30px;
+				opacity: 0.8;
+				padding: 10px 20px 0 20px;
+			}
+
+			.time-left {
+				background: brown;
+			}
+			
+			.left {
+				margin-right: 15px;
+			}
+        </style>
+    </head>
+    <body>
+		<nav class="main-nav">
+			<h2 class="main-nav-title center">Military Approximate Time left</h2>
+		</nav>        
+		<main>
+			<h2 class="time-title">Start Time</h2>
+			<section class="time start-time">
+				<div class="hour">12</div>
+				<div class="minute">00</div>
+				<div class="pmam">AM</div>
+				<div class="day">01</div>
+				<div class="month">06</div>
+				<div class="year">2020</div>
+			</section>
+			<h2 class="time-title">Time Now</h2>
+			<section class="time time-now">
+				<div class="hour">00</div>
+				<div class="minute">00</div>
+				<div class="pmam"></div>
+				<div class="day">01</div>
+				<div class="month">06</div>
+				<div class="year">2020</div>
+			</section>
+			<h2 class="time-title">Time Left</h2>
+			<section>
+				<section class="time time-left">
+					<div class="left days-left"><span class="days">00</span> Days</div>
+					<div class="left hours-left"><span class="frac-hours">00</span> Hours</div>
+				</section>
+				<h2 class="time-title center">or</h2>
+				<section class="time time-left">
+					<div class="left hours-left"><span class="hours">00</span> Hours</div>
+					<div class="left minutes-left"><span class="minutes">00</span> Minutes</div>
+				</section>
+				<h2 class="time-title center">or</h2>
+				<section class="time time-left">
+					<div class="left ms-left"><span class="ms">00</span> ms</div>
+				</section>
+			</section>
+		</main>
+
+		<script>
+			let startDate = new Date("01 jun 2020 00:00:00");
+			let endDate = new Date("01 jun 2021 00:00:00");
+			let curDate = new Date();
+
+			function setCurTime() {
+				curDate = new Date();
+				let year = curDate.getFullYear()
+				let month = curDate.getMonth() + 1
+				let day = curDate.getDate();
+				let hour = curDate.getHours() % 12 == 0 ? 12 : curDate.getHours() % 12;
+				let minute = curDate.getMinutes();	
+				let pmAM = curDate.getHours() >= 12 && curDate.getMinutes() >= 1 ? "PM" : "AM";
+				document.querySelector(".time-now .year").innerText = year;
+				document.querySelector(".time-now .month").innerText = month.toString().padStart(2, '0');
+				document.querySelector(".time-now .day").innerText = day.toString().padStart(2, '0');
+				document.querySelector(".time-now .hour").innerText = hour.toString().padStart(2, '0');
+				document.querySelector(".time-now .minute").innerText = minute.toString().padStart(2, '0');
+				document.querySelector(".time-now .pmam").innerText = pmAM;
+				calculateRemaining();
+			}
+
+			function calculateRemaining() {
+				let timeLeft = endDate - curDate;
+				if(timeLeft <= 0) {
+					alert("You are free.");
+					return;
+				}
+				let hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60)//In Hours;
+				let minutesLeft =  Math.floor((timeLeft / 1000 / 60) - (hoursLeft * 60));
+				let daysLeft =  Math.floor(timeLeft / 1000 / 60 / 60 / 24);
+				let fracHours =  Math.floor((timeLeft / 1000 / 60 / 60) - daysLeft * 24) ;
+				document.querySelector(".time-left .hours").innerText = Math.floor(hoursLeft).toString().padStart(2, '0');
+				document.querySelector(".time-left .minutes").innerText = Math.floor(minutesLeft).toString().padStart(2, '0');
+				document.querySelector(".time-left .days").innerText = Math.floor(daysLeft).toString().padStart(2, '0');
+				document.querySelector(".time-left .frac-hours").innerText = Math.floor(fracHours).toString().padStart(2, '0');
+				document.querySelector(".time-left .ms").innerText = Math.floor(timeLeft).toString().padStart(2, '0');
+			}
+
+			setInterval(setCurTime ,1);
+		</script>
+    </body>
+</html>
