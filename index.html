@@ -7,38 +7,52 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
-        	* {
+
+        	/* UTIL */
+        	.center {
+        		text-align: center;
+        	}
+
+        	/* Reset */
+        	*,
+        	*::after,
+        	*::before {
         		margin: 0;
         		padding: 0;
         		box-sizing: border-box;
         	}
+			
+			/* Base */
+			html {
+				font-size: 62.5%;
+			}
         	body {
+				font-family: arial, sans-serif;
         		height: 100vh;
         		background: #FFc015;
-        		color: #000;
-				font-family: arial, sans-serif;
+        		color: #000000;
         	}
-        	.main-nav {
+
+			/* NAV */
+        	.app-nav {
         		display: flex;
         		justify-content: center;
         		align-items: center;
         		background-color: #000;
         		color: #FFc015;
         	}
-			
-			.center {
-				text-align: center;
-			}
 
-			.main-nav-title {
-				font-size: 30px;
-				letter-spacing: 0.3rem;
-				padding: 5px;
-				text-transform: uppercase;
-			}
+
+        	.app-nav-title {
+        		font-size: 3rem;
+        		letter-spacing: 0.3rem;
+        		padding: 0.5rem;
+        		text-transform: uppercase;
+        	}
 			
-			main {
-				font-size: 22px;
+			
+			.app {
+				font-size: 2rem;
 			}
 
 			.hour::after {
@@ -78,10 +92,14 @@
         </style>
     </head>
     <body>
-		<nav class="main-nav">
-			<h2 class="main-nav-title center">Military Approximate Time left</h2>
-		</nav>        
-		<main>
+		<header>
+			<nav class="app-nav">
+				<h2 class="app-nav-title center">Military Approximate Time left</h2>
+			</nav> 
+		</header>
+
+		<main class="app">
+			<!-- The date we started at. -->
 			<h2 class="time-title">Start Time</h2>
 			<section class="time start-time">
 				<div class="hour">12</div>
@@ -91,16 +109,18 @@
 				<div class="month">06</div>
 				<div class="year">2020</div>
 			</section>
+			<!-- Current time -->
 			<h2 class="time-title">Time Now</h2>
 			<section class="time time-now">
 				<div class="hour">00</div>
 				<div class="minute">00</div>
 				<div class="pmam"></div>
-				<div class="day">01</div>
-				<div class="month">06</div>
-				<div class="year">2020</div>
+				<div class="day">00</div>
+				<div class="month">00</div>
+				<div class="year">0000</div>
 			</section>
-			<h2 class="time-title">Time Left</h2>
+			<!-- Time remaining -->
+			<h2 class="time-title">Time Remaining</h2>
 			<section>
 				<section class="time time-left">
 					<div class="left days-left"><span class="days">00</span> Days</div>
@@ -113,13 +133,12 @@
 				</section>
 				<h2 class="time-title center">or</h2>
 				<section class="time time-left">
-					<div class="left ms-left"><span class="ms">00</span> ms</div>
+					<div class="left ms-left"><span class="ms">000</span> ms</div>
 				</section>
 			</section>
 		</main>
 
 		<script>
-			let startDate = new Date("01 jun 2020 00:00:00");
 			let endDate = new Date("01 jun 2021 00:00:00");
 			let curDate = new Date();
 
@@ -146,15 +165,17 @@
 					alert("You are free.");
 					return;
 				}
-				let hoursLeft = Math.floor(timeLeft / 1000 / 60 / 60)//In Hours;
-				let minutesLeft =  Math.floor((timeLeft / 1000 / 60) - (hoursLeft * 60));
 				let daysLeft =  Math.floor(timeLeft / 1000 / 60 / 60 / 24);
-				let fracHours =  Math.floor((timeLeft / 1000 / 60 / 60) - daysLeft * 24) ;
-				document.querySelector(".time-left .hours").innerText = Math.floor(hoursLeft).toString().padStart(2, '0');
-				document.querySelector(".time-left .minutes").innerText = Math.floor(minutesLeft).toString().padStart(2, '0');
-				document.querySelector(".time-left .days").innerText = Math.floor(daysLeft).toString().padStart(2, '0');
-				document.querySelector(".time-left .frac-hours").innerText = Math.floor(fracHours).toString().padStart(2, '0');
-				document.querySelector(".time-left .ms").innerText = Math.floor(timeLeft).toString().padStart(2, '0');
+				let fracHours =  Math.round((timeLeft / 1000 / 60 / 60) - daysLeft * 24);
+
+				let hoursLeft = Math.floor(timeLeft / 1000 / 3600)//In Hours;
+				let minutesLeft =  Math.round((timeLeft / 1000 / 60) - (hoursLeft * 60));
+
+				document.querySelector(".time-left .hours").innerText = hoursLeft.toString().padStart(2, '0');
+				document.querySelector(".time-left .minutes").innerText = minutesLeft.toString().padStart(2, '0');
+				document.querySelector(".time-left .days").innerText = daysLeft.toString().padStart(2, '0');
+				document.querySelector(".time-left .frac-hours").innerText = fracHours.toString().padStart(2, '0');
+				document.querySelector(".time-left .ms").innerText = timeLeft.toString().padStart(3, '0');
 			}
 
 			setInterval(setCurTime ,1);
